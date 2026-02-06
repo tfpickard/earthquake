@@ -1,70 +1,50 @@
-# General-Purpose Project Template (Web, CLI, Desktop, Mobile)
+# Earthquake Constellations
 
-This repository is a **polished, production-first template** for building modern products. It prioritizes **high-quality UX, long-term maintainability, and shipping confidence** over MVP shortcuts. It is designed for web apps (optimized for Vercel), but also supports **CLI tools, desktop (macOS), and mobile (iOS)** with a consistent engineering approach.
+A Next.js + Canvas visualization that turns recent USGS earthquakes into a living night-sky constellation. Magnitude drives star brightness, depth controls softness, and age fades each event into the dark.
 
-## What this template optimizes for
+## Stack
 
-- **Polished product > MVP**: invest in design systems, performance budgets, accessibility, and reliability from day one.
-- **Modern defaults**: Bun, TypeScript, Vite/Next.js, Tailwind/Vanilla Extract, and Python for backends.
-- **Vercel-first** deployments for web apps.
-- **Fast iteration** without sacrificing code quality: typed APIs, robust linting, and CI.
-- **Scalable structure**: works for single apps and monorepos.
+- **Next.js App Router (canary)** + **React 19**
+- **TypeScript**
+- **Tailwind CSS v4**
+- **Vercel Python Serverless Function** (`api/quakes.py`)
+- **Node.js 22.x** + **pnpm**
 
-## Recommended stack (early-adopter friendly)
+## Local development
 
-### Web
-- **Framework**: Next.js App Router (preferred) or Remix
-- **Runtime**: **Bun** (preferred) or Node 20+
-- **Package manager**: **Bun** or **pnpm** (avoid npm)
-- **Styling**: Tailwind CSS or Vanilla Extract
-- **State/data**: TanStack Query, tRPC or REST + OpenAPI
-- **DB**: Postgres + Prisma or Drizzle
-- **Auth**: NextAuth, Clerk, or custom OIDC
-- **Testing**: Playwright + Vitest + React Testing Library
-- **Analytics**: PostHog, Vercel Analytics
-
-### Backend (APIs, services, jobs)
-- **Language**: **Python** (FastAPI / Litestar), TypeScript, or Go for high-perf needs
-- **Tasks**: Celery + Redis (Python) or Temporal for workflows
-- **Observability**: OpenTelemetry + structured logging
-
-### CLI / Desktop / Mobile
-- **CLI**: Python (Typer) or TypeScript (oclif) with Bun runtime
-- **macOS**: SwiftUI + Xcode (or Tauri + Rust for cross-platform)
-- **iOS**: SwiftUI + async/await
-
-## Suggested repo structure
-
-```
-.
-├── apps/               # web/mobile/desktop apps
-├── packages/           # shared UI, utils, API clients
-├── services/           # backend services, workers
-├── infra/              # deployment configs
-├── docs/               # product + engineering docs
-└── README.md
+```bash
+pnpm install
+pnpm dev
 ```
 
-## Vercel-first deployment guidelines
+Open `http://localhost:3000`.
 
-- Use **Next.js App Router** and prefer **Edge Runtime** for latency-critical routes.
-- Store secrets in **Vercel Environment Variables**.
-- Use **Vercel Cron** for scheduled jobs.
-- Prefer **Vercel Postgres** or managed Postgres (Neon/Supabase).
+### API
 
-## Quality bar checklist (non-negotiable)
+The serverless function normalizes USGS GeoJSON feeds:
 
-- ✅ Accessibility (WCAG AA) and keyboard navigation
-- ✅ Performance budgets + Lighthouse CI
-- ✅ Typed APIs and validated inputs
-- ✅ Observability (logs, tracing, metrics)
-- ✅ Security basics (rate limiting, CSRF, secrets management)
+```
+GET /api/quakes?window=hour|day|week&minMag=1.2
+```
 
-## See also
+Caching is configured per-window. Errors from USGS return a friendly JSON message with a 503 status.
 
-- [agent.md](agent.md) – contributor & coding guidelines
-- [Claude.md](Claude.md) – Claude-specific instructions
-- [codex.md](codex.md) – Codex-specific instructions
-- [ARCHITECTURE.md](ARCHITECTURE.md) – system design defaults
-- [CONTRIBUTING.md](CONTRIBUTING.md) – workflows & standards
-- [PROJECT_CHECKLIST.md](PROJECT_CHECKLIST.md) – launch readiness
+## Quality checks
+
+```bash
+pnpm lint
+pnpm typecheck
+```
+
+## Deployment (Vercel)
+
+1. Install the Vercel CLI: `pnpm dlx vercel@latest`.
+2. Run `vercel` from the repo root.
+
+The Python function is wired via `vercel.json` and will deploy automatically.
+
+## Notes
+
+- Canvas caps rendering at 2,000 stars for performance.
+- Hover to see detailed quake info + USGS event link.
+- Polling intervals: 30s (hour), 2m (day), 5m (week).
