@@ -1,24 +1,27 @@
-# Codex Instructions (Project Template)
+# Codex Workflow — Earthquake Constellations
 
-This repo is a **general-purpose, production-first template** optimized for modern web apps (Vercel), but suitable for CLI, macOS, and iOS projects.
+We operate as a small multi-agent team shipping in one evening. The workflow below mirrors that structure so any contributor can jump in quickly.
 
-## Defaults
+## Multi-agent roles & flow
 
-- **Runtime**: Bun (preferred), Node 20+ fallback
-- **Package manager**: Bun or pnpm
-- **Frontend**: Next.js App Router + TypeScript
-- **Backend**: Python (FastAPI/Litestar)
-- **DB**: Postgres (Prisma/Drizzle)
-- **Testing**: Vitest + Playwright
+1. **Architect** — Defines system boundaries, API contracts, caching policy, and data normalization.
+2. **Backend Engineer** — Implements `api/quakes.py` and Vercel configuration.
+3. **Frontend Engineer** — Builds Next.js App Router UI, hooks, and Canvas renderer.
+4. **Designer** — Tunes visual language (ambient gradients, typography, motion, legend).
+5. **QA / Perf** — Runs lint/typecheck, validates hover interactions, and checks canvas FPS.
 
-## Guiding principles
+## Daily commands
 
-- Build for **polish, reliability, and longevity**.
-- Prefer **type safety**, **validated inputs**, and **observability**.
-- Optimize for **Vercel deployments** for web apps.
+```bash
+pnpm install
+pnpm dev
+pnpm lint
+pnpm typecheck
+```
 
-## Expected artifacts
+## Release checklist
 
-- README with setup, stack, and deployment notes.
-- Architecture and contributing docs.
-- Launch checklist.
+- [ ] API returns normalized JSON for hour/day/week and handles downtime gracefully.
+- [ ] Canvas renders clusters, twinkle, blur, and hover tooltip.
+- [ ] Accessibility: controls are keyboard navigable and labels are readable.
+- [ ] Vercel deploy works with Node 22 + Python 3.12.
