@@ -27,7 +27,7 @@ interface Cluster {
 
 interface ConstellationCanvasProps {
   data: QuakeResponse | null;
-  window: QuakeWindow;
+  timeWindow: QuakeWindow;
   onHover: (star: Star | null, position: { x: number; y: number } | null) => void;
 }
 
@@ -49,7 +49,11 @@ const formatClusterLabel = (place: string) => {
   return parts.length > 1 ? parts[1] : place;
 };
 
-export default function ConstellationCanvas({ data, window, onHover }: ConstellationCanvasProps) {
+export default function ConstellationCanvas({
+  data,
+  timeWindow,
+  onHover
+}: ConstellationCanvasProps) {
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
   const sizeRef = useRef({ width: 0, height: 0 });
   const hoveredRef = useRef<Star | null>(null);
@@ -66,7 +70,7 @@ export default function ConstellationCanvas({ data, window, onHover }: Constella
     });
 
     const now = Date.now();
-    const maxWindow = windowMs[window];
+    const maxWindow = windowMs[timeWindow];
     const trimmed = sorted.slice(0, MAX_STARS);
 
     const computedStars = trimmed.map((item) => {
@@ -117,7 +121,7 @@ export default function ConstellationCanvas({ data, window, onHover }: Constella
     });
 
     return { stars: computedStars, clusters: [...clusterMap.values()] };
-  }, [data, window]);
+  }, [data, timeWindow]);
 
   useEffect(() => {
     const canvas = canvasRef.current;

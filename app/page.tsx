@@ -48,7 +48,7 @@ export default function HomePage() {
       <div className="absolute inset-0">
         <ConstellationCanvas
           data={data}
-          window={timeWindow}
+          timeWindow={timeWindow}
           onHover={(star, position) => {
             setHovered(star);
             setHoverPos(position);
